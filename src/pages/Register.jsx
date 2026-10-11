@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+
 function Register() {
   const [form, setForm] = useState({
     name: "",
@@ -25,7 +28,7 @@ function Register() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/auth/register",
+        `${API_BASE_URL}/api/auth/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -46,7 +49,9 @@ function Register() {
       setMessage("Registration successful! Redirecting to login...");
       setTimeout(() => navigate("/login"), 1200);
     } catch (error) {
-      setMessage(error.message || "Could not connect to the server.");
+      setMessage(
+        error.message || "Could not connect to the server."
+      );
     } finally {
       setLoading(false);
     }
@@ -58,6 +63,7 @@ function Register() {
         <p className="auth-brand">ARTVISTA</p>
         <p className="auth-eyebrow">YOUR CREATIVE SPACE</p>
         <h1>Create your account</h1>
+
         <p className="auth-subtitle">
           Join the community and showcase your artwork.
         </p>

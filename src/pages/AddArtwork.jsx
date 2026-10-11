@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+
 function AddArtwork({ onSuccess, onCancel }) {
   const [form, setForm] = useState({
     title: "",
@@ -102,7 +105,7 @@ function AddArtwork({ onSuccess, onCancel }) {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/artworks/upload",
+        `${API_BASE_URL}/api/artworks/upload`,
         {
           method: "POST",
           body: data
