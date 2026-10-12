@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://artvista-backend-echr.onrender.com";
 
 function Login() {
   const [form, setForm] = useState({
@@ -49,6 +50,7 @@ function Login() {
 
       setTimeout(() => navigate("/gallery"), 800);
     } catch (error) {
+      console.error("Login failed:", error);
       setMessage(
         error.message || "Could not connect to the server."
       );
@@ -98,7 +100,9 @@ function Login() {
         </form>
 
         {message && (
-          <p className="auth-message">{message}</p>
+          <p className="auth-message" role="alert">
+            {message}
+          </p>
         )}
 
         <p className="auth-switch">
