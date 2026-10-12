@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://artvista-backend-echr.onrender.com";
 
 function AddArtwork({ onSuccess, onCancel }) {
   const [form, setForm] = useState({
@@ -126,6 +127,7 @@ function AddArtwork({ onSuccess, onCancel }) {
         navigate("/gallery");
       }
     } catch (error) {
+      console.error("Artwork upload failed:", error);
       setMessage(
         error.message || "Could not connect to the server."
       );
@@ -141,7 +143,6 @@ function AddArtwork({ onSuccess, onCancel }) {
       }`}
     >
       <p className="auth-brand">ARTVISTA</p>
-
       <p className="auth-eyebrow">YOUR CREATIVE SPACE</p>
 
       <h1 id={isPopup ? "upload-modal-title" : undefined}>
@@ -153,10 +154,7 @@ function AddArtwork({ onSuccess, onCancel }) {
       </p>
 
       <form className="auth-form" onSubmit={handleSubmit}>
-        <label htmlFor="artwork-title">
-          Artwork title
-        </label>
-
+        <label htmlFor="artwork-title">Artwork title</label>
         <input
           id="artwork-title"
           name="title"
@@ -167,10 +165,7 @@ function AddArtwork({ onSuccess, onCancel }) {
           required
         />
 
-        <label htmlFor="artwork-description">
-          Description
-        </label>
-
+        <label htmlFor="artwork-description">Description</label>
         <textarea
           id="artwork-description"
           name="description"
@@ -181,10 +176,7 @@ function AddArtwork({ onSuccess, onCancel }) {
           maxLength={250}
         />
 
-        <label htmlFor="artwork-category">
-          Category
-        </label>
-
+        <label htmlFor="artwork-category">Category</label>
         <input
           id="artwork-category"
           name="category"
@@ -198,7 +190,6 @@ function AddArtwork({ onSuccess, onCancel }) {
         <label htmlFor="artwork-image">
           Choose artwork image
         </label>
-
         <input
           id="artwork-image"
           type="file"
