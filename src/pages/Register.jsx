@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
@@ -18,7 +17,10 @@ function Register() {
   const navigate = useNavigate();
 
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
   }
 
   async function handleSubmit(e) {
@@ -31,22 +33,31 @@ function Register() {
         `${API_BASE_URL}/api/auth/register`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form)
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: form.name.trim(),
+            email: form.email.trim(),
+            password: form.password
+          })
         }
       );
 
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        throw new Error("Registration failed. Please try again.");
+        throw new Error(
+          data.message || "Registration failed. Please try again."
+        );
       }
 
-      const data = await response.json();
-
       if (!data || !data.id) {
-        throw new Error("Registration failed. Please try again.");
+        throw new Error("Invalid registration response.");
       }
 
       setMessage("Registration successful! Redirecting to login...");
+
       setTimeout(() => navigate("/login"), 1200);
     } catch (error) {
       setMessage(
@@ -62,6 +73,7 @@ function Register() {
       <section className="auth-card">
         <p className="auth-brand">ARTVISTA</p>
         <p className="auth-eyebrow">YOUR CREATIVE SPACE</p>
+
         <h1>Create your account</h1>
 
         <p className="auth-subtitle">
@@ -107,7 +119,11 @@ function Register() {
           </button>
         </form>
 
-        {message && <p className="auth-message">{message}</p>}
+        {message && (
+          <p className="auth-message" role="alert">
+            {message}
+          </p>
+        )}
 
         <p className="auth-switch">
           Already have an account? <Link to="/login">Sign in</Link>
