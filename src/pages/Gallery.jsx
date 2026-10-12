@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import AddArtwork from "./AddArtwork";
 import "./Gallery.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://artvista-backend-echr.onrender.com";
+
 function Gallery() {
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +32,7 @@ function Gallery() {
     async function fetchArtworks() {
       try {
         const response = await fetch(
-          "http://localhost:8080/api/artworks"
+          `${API_BASE_URL}/api/artworks`
         );
 
         if (!response.ok) {
@@ -41,10 +45,12 @@ function Gallery() {
           setArtworks(Array.isArray(data) ? data : []);
           setError("");
         }
-      } catch {
+      } catch (err) {
+        console.error("Failed to load artworks:", err);
+
         if (!cancelled) {
           setError(
-            "Unable to load artworks. Check that the backend is running."
+            "Unable to load artworks. Please try refreshing the page."
           );
         }
       } finally {
@@ -79,9 +85,11 @@ function Gallery() {
   function getImageUrl(imageUrl) {
     if (!imageUrl) return "";
 
-    return imageUrl.startsWith("/uploads/")
-      ? `http://localhost:8080${imageUrl}`
-      : imageUrl;
+    if (imageUrl.startsWith("/uploads/")) {
+      return `${API_BASE_URL}${imageUrl}`;
+    }
+
+    return imageUrl;
   }
 
   async function handleDelete(id) {
@@ -93,7 +101,7 @@ function Gallery() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/artworks/${id}`,
+        `${API_BASE_URL}/api/artworks/${id}`,
         { method: "DELETE" }
       );
 
@@ -109,6 +117,7 @@ function Gallery() {
         current?.id === id ? null : current
       );
     } catch (err) {
+      console.error("Failed to delete artwork:", err);
       alert(err.message || "Could not connect to the server.");
     }
   }
@@ -116,7 +125,7 @@ function Gallery() {
   async function handleEdit(art, updatedFields) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/artworks/${art.id}`,
+        `${API_BASE_URL}/api/artworks/${art.id}`,
         {
           method: "PUT",
           headers: {
@@ -145,6 +154,7 @@ function Gallery() {
         current?.id === art.id ? updatedArtwork : current
       );
     } catch (err) {
+      console.error("Failed to update artwork:", err);
       alert(err.message || "Could not connect to the server.");
     }
   }
